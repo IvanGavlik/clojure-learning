@@ -1,4 +1,4 @@
-(ns clojure-learning.data-structures.core)
+(ns clojure-learning.data-structures.map)
 
 (def names ["l p"])
 

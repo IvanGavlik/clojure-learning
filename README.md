@@ -6,6 +6,10 @@ Covers topic from books
 * Clojure for the Brave and True
 * Programming Clojure-Pragmatic Programmers
 
+## TODO
+* https://blog.higher-order.net/2009/02/01/understanding-clojures-persistentvector-implementation.html
+* https://hypirion.com/musings/understanding-persistent-vector-pt-1
+
 ## License
 
 Copyright © 2025 Ivan Gavlik
