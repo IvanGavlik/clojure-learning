@@ -110,7 +110,9 @@
   (sort (fn [e1 e2] (compare (sort-key e1) (sort-key e2)) ) people)
   )
 
-;; task management app
+;; Managing a Task
+
+;; Initialize Task List
 (defn init-task-list []
   (hash-map {})
   )
@@ -118,6 +120,7 @@
 (defn valid-priority [priority]
   (or (= :low priority) (= :medium priority) (= :high priority))
   )
+
 
 (defn create-task [id title desc priority]
   (when (valid-priority priority)
@@ -129,6 +132,7 @@
   (= 0 (count (filter #(= (:title %)  title) task-list))
   ))
 
+;; Add a Task
 (defn add-task [task-list title desc priority]
   (when (task-not-exist? task-list title)
     (let [last-task-id (:id (last task-list) 0)
@@ -139,10 +143,12 @@
     )
   )
 
+;; Remove a Task
 (defn remove-task [task-list task-id]
   (remove #(= (:id %) task-id) task-list)
   )
 
+;; Mark a Task as Completed
 (defn mark-as-completed [task-list task-id]
   (let [task (first (filter #(= (% :id) task-id) task-list))
         index-of-task (index-of task-list task)]
@@ -150,4 +156,43 @@
       (assoc task-list index-of-task (assoc task :completed? true))
       )
     )
+  )
+
+;; List All Pending Tasks
+(defn pending-tasks [task-list]
+  (filter #(not (:completed? %)) task-list)
+  )
+
+
+;; Find Tasks by Priority
+(defn filter-by-priority [task-list priority]
+  (when (valid-priority priority)
+    (filter #(= (:priority %) priority) task-list)
+    )
+  )
+
+(defn priority-count [priority]
+  (cond
+    (= priority :high) 3
+    (= priority :medium) 2
+    (= priority :low) 2
+    :else 0
+    )
+  )
+
+(defn priority-higher-comparator [el1 el2] ()
+  (let [priority1 (priority-count (el1 :priority))
+        priority2 (priority-count (el2 :priority))]
+    (compare priority2 priority1)
+    )
+  )
+
+;; Sort Tasks by Priority
+(defn sort-by-priority [task-list]
+  (sort priority-higher-comparator task-list)
+  )
+
+;; Get Next Task
+(defn next-task [task-list]
+  (sort-by-priority (pending-tasks task-list))
   )
