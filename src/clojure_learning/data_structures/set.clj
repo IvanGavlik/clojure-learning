@@ -1,5 +1,6 @@
 (ns clojure-learning.data-structures.set
   (:use clojure.set)
+  (:require [clojure.string :as string])
   )
 
 (defn foo
@@ -41,6 +42,67 @@
 
 (def simple-map {:sundance "s" :darwin "beagle"})
 
+; Create a set of unique numbers from 1 to 10. Add 11 and remove 5 from the set.
+(def numbers1-10 (hash-set 1 2 3 4 5 6 7 8 9 10))
+(conj numbers1-10 11)
+(disj numbers1-10 5)
+
+; Write a function that checks whether a given element exists in a set.
+(contains? numbers1-10 11)
+
+; Given two sets, return a new set containing only the elements that are present in both sets.
+(def numbers10-15 (hash-set 10 11 12 13 14 15))
+(intersection numbers1-10 numbers10-15)
+
+;; Write a function that takes a list of sets and returns their union.
+(union numbers1-10 numbers10-15)
+
+;; Given two sets, return a new set containing the elements
+;; that are only in the first set but not in the second.
+(difference numbers1-10 numbers10-15)
+
+(def num-vector (vector 1 1 2 3 4 4 5))
+(def num-set1-5 (into #{} num-vector))
+
+;; Write a function that takes a string of words and returns
+;; a set containing all unique words in lowercase.
+(defn return-unique [words]
+    (into #{} (string/split words #" "))
+  )
+
+;; Managing User Permissions with Sets
+; user {:user-name :email :permission}
+; permissions :read :write :delete
+
+(defn valid-user-permission? [permission]
+  (subset? permission #{:read :write :delete})
+  )
+
+(defn valid-user? [user]
+  (and (not (empty? (:user-name user)))
+       (not (empty? (:email user)))
+       ))
+
+; Create a function to assign a set of permissions to a user.
+(defn assign-user-permissions [user permissions]
+  (when (and (valid-user? user) (valid-user-permission? permissions))
+    (assoc user :permissions permissions)
+    ))
+
+; Write a function to check if a user has a specific permission.
+(defn has-user-permission? [user permission]
+  (when (and (valid-user? user) (valid-user-permission? #{permission}))
+    (contains? (:permissions user) permission)
+    ))
+
+; Write a function to revoke a specific permission from a user.
+(defn revoke-user-permissions [user permission]
+  (when (and (valid-user? user) (valid-user-permission? #{permission}))
+    (let [current-p (:permissions user)
+          remove-p (disj current-p permission)]
+      (assoc user :permissions remove-p)
+      )
+    ))
 
 (defn main []
   (project
