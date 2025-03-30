@@ -79,8 +79,8 @@
   )
 
 (defn valid-user? [user]
-  (and (not (empty? (:user-name user)))
-       (not (empty? (:email user)))
+  (and (some? (:user-name user))
+       (some? (:email user))
        ))
 
 ; Create a function to assign a set of permissions to a user.
@@ -103,6 +103,33 @@
       (assoc user :permissions remove-p)
       )
     ))
+
+; Find users who have at least one common permission from a given permission set
+(defn find-users-common-permissions [users permissions]
+  (filter #(subset? permissions (:permissions %)) users)
+  )
+
+; Find users who have all required permissions from a given permission set.
+(defn find-users-all-permissions [users permissions]
+  (filter #(= permissions (:permissions %)) users)
+  )
+
+; Compute the difference between two users' permissions
+(defn diff-users-permissions [user-1 user-2]
+  (difference (:permissions user-1) (:permissions user-2))
+  )
+
+; Generate a report of all users and their permissions
+; Example Alice -> #{:read :write}
+(defn users-permissions-report [users]
+  (map #(let [user (:user-name %)
+              permissions (:permissions %) ]
+          (cond
+            (some? permissions) (str user " -> " permissions)
+            :else (str user)
+            ))
+       users)
+  )
 
 (defn main []
   (project
