@@ -1,7 +1,7 @@
 (ns clojure-learning.data-structures.set
   (:use clojure.set)
-  (:require [clojure.string :as string])
-  )
+  (:require [clojure.string :as string]))
+
 
 (defn foo
   "I don't do a whole lot."
@@ -14,31 +14,27 @@
     {:name "The Art of the Fugue" :composer "J. S. Bach"}
     {:name "Musical Offering" :composer "J. S. Bach"}
     {:name "Requiem" :composer "Giuseppe Verdi"}
-    {:name "Requiem" :composer "W. A. Mozart"}
-    }
-  )
+    {:name "Requiem" :composer "W. A. Mozart"}})
 
 (def composers
   #{
     {:composer "J. S. Bach" :country "Germany"}
     {:composer "W. A. Mozart" :country "Austria"}
-    {:composer "Giuseppe Verdi" :country "Italy"}
-    }
-  )
+    {:composer "Giuseppe Verdi" :country "Italy"}})
+
 
 (def nations
   #{
     {:nation "Germany" :language "German"}
     {:nation "Austria" :language "German"}
-    {:nation "Italy" :language "Italian"}
-    }
-  )
+    {:nation "Italy" :language "Italian"}})
+
 
 
 (defn my-select []
   (let [selected (select #(= (:name %) "Requiem") compositions)]
-    (println selected)
-    ))
+    (println selected)))
+
 
 (def simple-map {:sundance "s" :darwin "beagle"})
 
@@ -67,78 +63,69 @@
 ;; Write a function that takes a string of words and returns
 ;; a set containing all unique words in lowercase.
 (defn return-unique [words]
-    (into #{} (string/split words #" "))
-  )
+    (into #{} (string/split words #" ")))
+
 
 ;; Managing User Permissions with Sets
 ; user {:user-name :email :permission}
 ; permissions :read :write :delete
-
 (defn valid-user-permission? [permission]
-  (subset? permission #{:read :write :delete})
-  )
+  (subset? permission #{:read :write :delete}))
 
 (defn valid-user? [user]
   (and (some? (:user-name user))
-       (some? (:email user))
-       ))
+       (some? (:email user))))
 
 ; Create a function to assign a set of permissions to a user.
 (defn assign-user-permissions [user permissions]
   (when (and (valid-user? user) (valid-user-permission? permissions))
-    (assoc user :permissions permissions)
-    ))
+    (assoc user :permissions permissions)))
 
 ; Write a function to check if a user has a specific permission.
 (defn has-user-permission? [user permission]
   (when (and (valid-user? user) (valid-user-permission? #{permission}))
-    (contains? (:permissions user) permission)
-    ))
+    (contains? (:permissions user) permission)))
 
 ; Write a function to revoke a specific permission from a user.
 (defn revoke-user-permissions [user permission]
   (when (and (valid-user? user) (valid-user-permission? #{permission}))
     (let [current-p (:permissions user)
           remove-p (disj current-p permission)]
-      (assoc user :permissions remove-p)
-      )
-    ))
+      (assoc user :permissions remove-p))))
+
 
 ; Find users who have at least one common permission from a given permission set
 (defn find-users-common-permissions [users permissions]
-  (filter #(subset? permissions (:permissions %)) users)
-  )
+  (filter #(subset? permissions (:permissions %)) users))
 
 ; Find users who have all required permissions from a given permission set.
 (defn find-users-all-permissions [users permissions]
-  (filter #(= permissions (:permissions %)) users)
-  )
+  (filter #(= permissions (:permissions %)) users))
 
 ; Compute the difference between two users' permissions
 (defn diff-users-permissions [user-1 user-2]
-  (difference (:permissions user-1) (:permissions user-2))
-  )
+  (difference (:permissions user-1) (:permissions user-2)))
 
 ; Generate a report of all users and their permissions
 ; Example Alice -> #{:read :write}
 (defn users-permissions-report [users]
   (map #(let [user (:user-name %)
-              permissions (:permissions %) ]
+              permissions (:permissions %)]
           (cond
             (some? permissions) (str user " -> " permissions)
-            :else (str user)
-            ))
-       users)
-  )
+            :else (str user)))
+       users))
+
+
+; TODO sets operations like projections union join ...
 
 (defn main []
   (project
     (join
       (select #(= (:composer %) "J. S. Bach") compositions)
       composers)
-    [:name :country])
-  )
+    [:name :country]))
+
 
 (comment
-  (main)
-  )
+  (main))

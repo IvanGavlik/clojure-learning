@@ -7,6 +7,7 @@ Covers topic from books
 * Programming Clojure-Pragmatic Programmers
 
 ## TODO
+* sets operations like projections union join ... 
 * https://blog.higher-order.net/2009/02/01/understanding-clojures-persistentvector-implementation.html
 * https://hypirion.com/musings/understanding-persistent-vector-pt-1
 
